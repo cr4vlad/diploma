@@ -1,0 +1,7 @@
+{% extends 'comuscentia/base.html' %}
+
+{% block content %}
+	<h1>{{ room.title }}</h1>
+    <p>{{ room.description|linebreaksbr }}</p>
+    <p>{{ room.textblock|linebreaksbr }}</p>
+{% endblock %}

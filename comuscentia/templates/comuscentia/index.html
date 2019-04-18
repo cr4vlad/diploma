@@ -1,0 +1,33 @@
+{% extends 'comuscentia/base.html' %}
+
+{% block content %}
+
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+			This. Is. Indeeeeex!
+		</div>
+
+		<div class="col-md-4">
+		{% if user.is_authenticated %}
+			Your rooms:
+			{% for user_room in user_rooms %}
+    			<div>
+    				<h2><a href="">{{ user_room.room.title }}</a></h2>
+    				{{ user_room.room.owner }}
+    			</div>
+			{% endfor %}
+			<hr>
+			Create new room
+		{% else %}
+			Login
+			Username:
+			Password:
+			<hr>
+			Register
+		{% endif %}
+		</div>
+	</div>
+</div>
+
+{% endblock %}
