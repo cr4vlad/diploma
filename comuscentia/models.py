@@ -14,5 +14,5 @@ class Room(models.Model):
 		return self.title
 
 class Participation(models.Model): # 1 entry for each act of subscription
-	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-	room = models.ForeignKey(Room, on_delete=models.CASCADE)
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users')
+	room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='rooms')

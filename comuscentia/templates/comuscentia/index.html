@@ -13,7 +13,7 @@
 			Your rooms:
 			{% for user_room in user_rooms %}
     			<div>
-    				<h2><a href="">{{ user_room.room.title }}</a></h2>
+    				<h2><a href="{% url 'room' pk=user_room.room.pk %}">{{ user_room.room.title }}</a></h2>
     				{{ user_room.room.owner }}
     			</div>
 			{% endfor %}
