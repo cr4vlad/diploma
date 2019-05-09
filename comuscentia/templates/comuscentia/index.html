@@ -4,27 +4,39 @@
 
 <div class="content container">
     <div class="row">
+
         <div class="col-md-8">
-			This. Is. Indeeeeex!
+			Find new rooms!<br>
+			Search:
 		</div>
+
+<!------------------------------------------------------------------>
 
 		<div class="col-md-4">
 		{% if user.is_authenticated %}
-			Your rooms:
+
+			<a class="btn btn-default" href="{% url 'new_room' %}">Create new room</a><br>
+
+			<h2>Your rooms:</h2>
 			{% for user_room in user_rooms %}
-    			<div>
-    				<h2><a href="{% url 'room' pk=user_room.room.pk %}">{{ user_room.room.title }}</a></h2>
+    			<div class="room">
+    				<h3><a href="{% url 'room' pk=user_room.room.pk %}">{{ user_room.room.title }}</a></h3>
     				{{ user_room.room.owner }}
     			</div>
 			{% endfor %}
-			<hr>
-			Create new room
+
+<!------------------------------------------------------------------>
+
 		{% else %}
-			Login
-			Username:
-			Password:
-			<hr>
-			Register
+
+			<a class="btn btn-default" href="">Registration</a><br>
+			
+			Login<br>
+			Username:<br>
+			Password:<br>
+
+			<a class="btn btn-default" href="">Login</a>
+
 		{% endif %}
 		</div>
 	</div>

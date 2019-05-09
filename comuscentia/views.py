@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from .models import Room, Participation
+from .forms import RoomForm
 
 def index(request):
 	if request.user.is_authenticated:
@@ -13,3 +15,32 @@ def index(request):
 def room(request, pk):
 	room = get_object_or_404(Room, pk=pk)
 	return render(request, 'comuscentia/room.html', {'room': room})
+
+@login_required
+def new_room(request):
+	if request.method == "POST":
+		form = RoomForm(request.POST)
+		if form.is_valid():
+			room = form.save(commit=False)
+			room.owner = request.user
+			room.created_date = timezone.now()
+			room.save()
+			return redirect('room', pk=room.pk)
+	else:
+		form = RoomForm()
+	return render(request, 'comuscentia/edit_room.html', {'form': form})
+
+@login_required
+def edit_room(request, pk):
+    room = get_object_or_404(Room, pk=pk)
+    if request.method == "POST":
+        form = RoomForm(request.POST, instance=room)
+        if form.is_valid():
+            room = form.save(commit=False)
+            room.owner = request.user
+            room.created_date = timezone.now()
+            room.save()
+            return redirect('room', pk=room.pk)
+    else:
+        form = RoomForm(instance=room)
+    return render(request, 'comuscentia/edit_room.html', {'form': form})

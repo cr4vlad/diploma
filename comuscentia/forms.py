@@ -1,8 +1,8 @@
 from django import forms
-from .models import Post
+from .models import Room
 
-class NewRoomForm(forms.ModelForm):
+class RoomForm(forms.ModelForm):
 
     class Meta:
         model = Room
-        fields = ('title', 'description')
+        fields = ('title', 'description', 'textblock', 'close')
