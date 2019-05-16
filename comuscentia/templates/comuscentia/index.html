@@ -27,18 +27,14 @@
 
 <!------------------------------------------------------------------>
 
-		{% else %}
+		{% else %} <!-- Или сделать это все двумя аккуратными кнопками в шапке?.. -->
 
-			<a class="btn btn-default" href="">Registration</a><br>
-			
-			Login<br>
-			Username:<br>
-			Password:<br>
-
-			<a class="btn btn-default" href="">Login</a>
+			<a class="btn btn-default" href="{% url 'django_registration_register' %}">Registration</a><br>
+			<a class="btn btn-default" href="{% url 'login' %}">Login</a>
 
 		{% endif %}
 		</div>
+
 	</div>
 </div>
 
