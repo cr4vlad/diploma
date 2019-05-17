@@ -6,7 +6,7 @@ Registration was made by using [Django Registration](https://django-registration
 - [x] Basic rooms logic
 - [x] Login
 - [x] Registration
-- [] Search algorithm
-- [] Access rights (room creator only)
-- [] Adaptive design
-- [] Usage tips
+- [ ] Search algorithm
+- [ ] Access rights (room creator only)
+- [ ] Adaptive design
+- [ ] Usage tips
