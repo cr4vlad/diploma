@@ -8,5 +8,7 @@ Registration was made by using [Django Registration](https://django-registration
 - [x] Registration
 - [ ] Search algorithm
 - [ ] Access rights (room creator only)
+- [ ] Tests
+- [ ] Chat
 - [ ] Adaptive design
 - [ ] Usage tips

@@ -11,7 +11,7 @@ class Room(models.Model):
 	close = models.BooleanField(default=False) # if room is closed for new participants, don't show in search
 
 	def __str__(self):
-		return self.title
+		return '%s by %s' % (self.title, self.owner)
 
 class Participation(models.Model): # 1 entry for each act of subscription
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users')

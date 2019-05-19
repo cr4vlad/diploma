@@ -17,13 +17,17 @@
 
 			<a class="btn btn-default" href="{% url 'new_room' %}">Create new room</a><br>
 
-			<h2>Your rooms:</h2>
-			{% for user_room in user_rooms %}
-    			<div class="room">
-    				<h3><a href="{% url 'room' pk=user_room.room.pk %}">{{ user_room.room.title }}</a></h3>
-    				{{ user_room.room.owner }}
-    			</div>
-			{% endfor %}
+			{% if not user_rooms %}
+				<h6>You don't participate in any rooms yet. Change it!</h6>
+			{% else %}
+				<h2>Your rooms:</h2>
+				{% for user_room in user_rooms %}
+					<div class="room">
+						<h3><a href="{% url 'room' pk=user_room.room.pk %}">{{ user_room.room.title }}</a></h3>
+						{{ user_room.room.owner }}
+					</div>
+				{% endfor %}
+			{% endif %}
 
 <!------------------------------------------------------------------>
 

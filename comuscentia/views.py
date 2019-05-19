@@ -25,6 +25,8 @@ def new_room(request):
 			room.owner = request.user
 			room.created_date = timezone.now()
 			room.save()
+			participant = Participation(user=request.user, room=room)
+			participant.save()
 			return redirect('room', pk=room.pk)
 	else:
 		form = RoomForm()
