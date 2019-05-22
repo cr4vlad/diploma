@@ -6,9 +6,10 @@ Registration was made by using [Django Registration](https://django-registration
 - [x] Basic rooms logic
 - [x] Login
 - [x] Registration
-- [ ] Search algorithm
+- [x] Search
 - [ ] Access rights (room creator only)
-- [ ] Tests
-- [ ] Chat
+- [ ] Tests (in progress)
 - [ ] Adaptive design
+	Questionable:
+- [ ] Chat
 - [ ] Usage tips

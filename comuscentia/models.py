@@ -15,4 +15,8 @@ class Room(models.Model):
 
 class Participation(models.Model): # 1 entry for each act of subscription
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users')
-	room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='rooms')
+	room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+class Keyword(models.Model): # 1 entry for each keyword in each room
+	room = models.ForeignKey(Room, on_delete=models.CASCADE)
+	keyword = models.CharField(max_length=50)

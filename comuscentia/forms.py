@@ -12,3 +12,6 @@ class RoomForm(forms.ModelForm):
             'description': Textarea(attrs={'cols': 50, 'rows': 5}),
             'textblock': Textarea(attrs={'cols': 50, 'rows': 10}),
         }
+
+class SearchForm(forms.Form):
+	search_field = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'id':'search_field'}))
