@@ -36,7 +36,7 @@ def search(request):
 		query = query.replace(",", "").replace(".", "").replace("?", "").replace("!", "").replace(";", "").replace(":", "").replace('"', "")
 		query = query.lower()
 		words = query.split()
-		stop_words = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 'can', 'will', 'just', "don't", 'should', 'now', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+		stop_words = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 'can', 'will', 'just', "don't", 'should', 'now', 'b', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 		keywords = []
 		for word in words:
 			if word not in stop_words:
@@ -46,26 +46,19 @@ def search(request):
 					word = word[:-3]
 				keywords.append(word)
 		print(keywords)
-		all_results = [] # может добавить сразу комнату по англ с значением совпадения = 1, заместо рекомендации
+		all_results = [] # insert recommended rooms
 		for keyword in keywords:
-			if len(keyword) < 3:
-				keyword_rooms = Keyword.objects.filter(keyword=keyword)
-			else:
-				keyword_rooms = Keyword.objects.filter(keyword__icontains=keyword) # убрать 'i', когда сделаю, чтоб ключевые слова были в lowercase
-			#if keyword_rooms:
-				#keys = [keyword_room.keyword for keyword_room in keyword_rooms] # new keywords
-				#for key in keys:
-
+			keyword_rooms = Keyword.objects.filter(keyword__startswith=keyword)
 			if keyword_rooms:
 				rooms = [keyword_room.room for keyword_room in keyword_rooms] # new rooms
-				result_rooms = [result[0] for result in all_results] # rooms, that are already in result
 				for room in rooms:
-					# записывать в список (комната, значение совпадения)
+					# записывать в список [комната, значение совпадения]
+					result_rooms = [result[0] for result in all_results] # rooms, that are already in result
 					if room in result_rooms: # если комната уже есть в результатах
 						# найти room в all_results, и добавить 1 к соответствующему значению
 						index = result_rooms.index(room)
 						print('all_results[index][1]: ' + str(all_results[index][1]))
-						all_results[index][1] += 1
+						all_results[index][1] += 1 # может +1 только когда полное совпадение keyword, в других случаях чем слабее совпадение (чем меньше % слова совпадает), тем меньше добавлять. Но для этого нужна сортировка, а не просто max. Тогда можно будет удалить однобуквенные стоп-слова
 					else:
 						all_results.append([room, 1])
 		if all_results:

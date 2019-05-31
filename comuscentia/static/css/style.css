@@ -1,3 +1,138 @@
+html, body {
+	height: 100%;
+}
+
 body {
-	
+	width: 100%;
+	margin: 0;
+	color: #003166;
+}
+
+header {
+	display: block;
+	width: 100%;
+	margin-bottom: 25px;
+	color: white;
+	font-size: 18px;
+	background-color: #007bff;
+  	box-shadow: 0 3px #006bdd;
+}
+
+h1 {
+	display: inline-block;
+	margin: 10px;
+	color: white;
+}
+
+#float_right {
+	display: inline-block;
+	float: right;
+	margin: 10px;
+	padding-top: 15px;
+}
+
+h2 {
+	text-align: center;
+}
+
+textarea {
+	display: block;
+}
+
+label {
+	font-size: 18px;
+	margin-left: 15px;
+}
+
+input[type=submit].search {
+	background: url('/static/images/search.png') no-repeat;
+	width: 34px;
+	height: 34px;
+	margin-left: 10px;
+}
+
+input#search_field {
+	width: 400px;
+}
+
+table {
+	margin: 10px;
+}
+
+.center {
+	text-align:center;
+	margin:auto;
+}
+
+.block-center {
+	width: 330px;
+	margin:auto;
+}
+
+.btn-primary {
+	width: 207px;
+	margin-bottom: 15px;
+	font-size: 18px;
+}
+
+.room {
+	display: block;
+	width: 100%;
+	padding: 5px;
+	padding-bottom: 15px;
+}
+
+p {
+	margin: 2px;
+}
+
+ul.errorlist {
+	color: red;
+}
+
+/* Extra small devices (portrait phones, less than 576px)
+ No media query for `xs` since this is the default in Bootstrap
+
+ Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) {
+	h1 {
+		padding-left: 50px;
+	}
+
+	#float_right {
+		padding-right: 50px;
+	}
+}
+
+/* Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) {
+	h1 {
+		padding-left: 100px;
+	}
+
+	#float_right {
+		padding-right: 100px;
+	}
+}
+
+/* Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) {
+	h1 {
+		padding-left: 150px;
+	}
+
+	#float_right {
+		padding-right: 150px;
+	}
+}
+
+/* Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) {
+	h1 {
+		padding-left: 250px;
+	}
+
+	#float_right {
+		padding-right: 250px;
+	}
 }

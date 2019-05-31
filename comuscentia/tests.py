@@ -40,3 +40,5 @@ class RoomModelTestClass(TestCase):
     def test_close(self):
         room = Room.objects.get(id=1)
         self.assertEquals(False, room.close)
+
+        # покрытие кода уже не смотрят

@@ -5,31 +5,31 @@
     <div class="row">
 
         <div class="col-md-8">
-			Find new rooms!<br>
-			<form method="post" id="search_form">
+            <br>
+			<form class="center" method="post" id="search_form">
     		{% csrf_token %}
-    		{{ form.as_p }}
-    		<input type="submit" value="Search">
+    		{{ form.as_table }}
+    		<input class="btn search" type="submit" value="">
   			</form>
-
+            <br>
 			<div id="search_results">
 			</div>
 		</div>
 
 <!------------------------------------------------------------------>
 
-		<div class="col-md-4">
+		<div class="col-md-4 border-left">
 		{% if user.is_authenticated %}
 
-			<a class="btn btn-default" href="{% url 'new_room' %}">Create new room</a><br>
+			<a class="btn btn-primary" href="{% url 'new_room' %}" role="button">Create new room</a><br>
 
 			{% if not rooms %}
 				<p>You don't participate in any rooms yet. Change it!</p>
 			{% else %}
-				<h2>Your rooms:</h2>
+				<h3>Your rooms:</h3>
 				{% for room in rooms %}
 					<div class="room">
-						<h3><a href="{% url 'room' pk=room.0.pk %}">{{ room.0.title }}</a></h3>
+						<h4><a href="{% url 'room' pk=room.0.pk %}">{{ room.0.title }}</a></h4>
 						<p>Participants: {{ room.1 }}</p>
 					</div>
 				{% endfor %}
@@ -39,8 +39,8 @@
 
 		{% else %} <!-- Или сделать это все двумя аккуратными кнопками в шапке?.. -->
 
-			<a class="btn btn-default" href="{% url 'django_registration_register' %}">Registration</a><br>
-			<a class="btn btn-default" href="{% url 'login' %}">Login</a>
+			<a class="btn" href="{% url 'django_registration_register' %}">Registration</a><br>
+			<a class="btn" href="{% url 'login' %}">Login</a>
 
 		{% endif %}
 		</div>
@@ -71,7 +71,7 @@ function search() {
             $('#search_results').empty();
             var i;
             for (i = 0; i < json.pk.length; i++) {
-            	$('#search_results').append('<div class="room"><h3><a href="room/'+json.pk[i]+'">'+json.title[i]+'</a></h3><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>');
+            	$('#search_results').append('<div class="room"><h4><a href="room/'+json.pk[i]+'">'+json.title[i]+'</a></h4><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>');
         	}
             console.log("success"); // another sanity check
         },

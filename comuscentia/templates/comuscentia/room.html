@@ -2,20 +2,22 @@
 
 {% block content %}
 
-	<h1>{{ room.title }}</h1>
-    <p>{{ room.description|linebreaksbr }}</p>
-    <p>{{ room.textblock|linebreaksbr }}</p>
+	<h2>{{ room.title }}</h2><br>
+	<div class="content container">
+    	<p class="alert alert-primary">{{ room.description|linebreaksbr }}</p>
+    	<p>{{ room.textblock|linebreaksbr }}</p><br>
 
     {% if user.is_authenticated %}
 
-    <!--<a class="btn btn-default" href="">Subscribe</a><br>-->
+    <!--<a class="btn btn-primary" href="">Subscribe</a><br>-->
 
-    <a class="btn btn-default" href="{% url 'edit_room' pk=room.pk %}">Edit room</a>
+    <a class="btn btn-secondary" href="{% url 'edit_room' pk=room.pk %}">Edit room</a>
 
     <!-- Форма для добавления ключевых слов. Только для создателя комнаты. -->
     
     <!-- delete room button (а можно ли просто взять и удалить комнату? мб кнопка будет запускать процесс удаления, который удалит комнату только через неделю, чтоб все юзеры успели себе сохранить все что нужно. Ну и закрыть тогда эту комнату для новых учасников) -->
 
     {% endif %}
+	</div>
 
 {% endblock %}
