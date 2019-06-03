@@ -22,9 +22,6 @@ def index(request):
 	else:
 		return render(request, 'comuscentia/index.html', {'form': form})
 
-def participants(room):
-	return len(Participation.objects.filter(room=room))
-
 def search(request):
 	if request.method == 'POST' and request.is_ajax():
 		print("ajax search view reached")
@@ -33,19 +30,7 @@ def search(request):
 		response_data = {}
 
 		#search algorithm
-		query = query.replace(",", "").replace(".", "").replace("?", "").replace("!", "").replace(";", "").replace(":", "").replace('"', "")
-		query = query.lower()
-		words = query.split()
-		stop_words = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 'can', 'will', 'just', "don't", 'should', 'now', 'b', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-		keywords = []
-		for word in words:
-			if word not in stop_words:
-				if re.search(r"er$", word) or re.search(r"ed$", word):
-					word = word[:-2]
-				elif re.search(r"ing$", word):
-					word = word[:-3]
-				keywords.append(word)
-		print(keywords)
+		keywords = get_keywords(query)
 		all_results = [] # insert recommended rooms
 		for keyword in keywords:
 			keyword_rooms = Keyword.objects.filter(keyword__startswith=keyword)
@@ -107,7 +92,10 @@ def search(request):
 @login_required
 def room(request, pk):
 	room = get_object_or_404(Room, pk=pk)
-	return render(request, 'comuscentia/room.html', {'room': room})
+	participations = Participation.objects.filter(room=room)
+	users = [participation.user for participation in participations]
+	count = participants(room)
+	return render(request, 'comuscentia/room.html', {'room': room, 'count': count, 'participants': users})
 
 @login_required
 def new_room(request):
@@ -120,6 +108,10 @@ def new_room(request):
 			room.save()
 			participant = Participation(user=request.user, room=room)
 			participant.save()
+			keywords = get_keywords(request.POST['title'])
+			for keyword in keywords:
+				kw = Keyword(room=room, keyword=keyword)
+				kw.save()
 			return redirect('room', pk=room.pk)
 	else:
 		form = RoomForm()
@@ -139,3 +131,42 @@ def edit_room(request, pk):
     else:
         form = RoomForm(instance=room)
     return render(request, 'comuscentia/edit_room.html', {'form': form})
+
+@login_required
+def subscribe(request, pk):
+	room = get_object_or_404(Room, pk=pk)
+	participant = Participation(user=request.user, room=room)
+	participant.save()
+	return redirect('room', pk=room.pk)
+
+@login_required
+def unsubscribe(request, pk):
+	room = get_object_or_404(Room, pk=pk)
+	Participation.objects.get(user=request.user, room=room).delete()
+	return redirect('room', pk=room.pk)
+
+@login_required
+def delete(request, pk):
+	Room.objects.get(pk=pk).delete()
+	return redirect('index')
+
+def participants(room):
+	return len(Participation.objects.filter(room=room))
+
+def get_keywords(title):
+	title = title.replace(",", "").replace(".", "").replace("?", "").replace("!", "").replace(";", "").replace(":", "").replace('"', "")
+	title = title.lower()
+	words = title.split()
+	stop_words = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', 'her', 'hers', 'herself', 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 'can', 'will', 'just', "don't", 'should', 'now', 'b', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+	keywords = []
+	for word in words:
+		if word not in stop_words:
+			if re.search(r"er$", word) or re.search(r"ed$", word):
+				word = word[:-2]
+			elif re.search(r"ing$", word):
+				word = word[:-3]
+			elif re.search(r"s$", word):
+				word = word[:-1]
+			keywords.append(word)
+	print(keywords)
+	return keywords

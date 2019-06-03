@@ -7,9 +7,10 @@ Registration was made by using [Django Registration](https://django-registration
 - [x] Login
 - [x] Registration
 - [x] Search
-- [ ] Access rights (room creator only)
+- [x] Refined rooms logic (subscribe/unsubscribe button, delete room, etc)
+- [x] Access rights (some users only)
 - [ ] Tests (in progress)
-- [ ] Adaptive design (in progress)
+- [x] Kinda adaptive design
 	
 	Questionable:
 - [ ] Chat
@@ -18,3 +19,6 @@ Registration was made by using [Django Registration](https://django-registration
 - [ ] Certification
 - [ ] Tests for subscription
 - [ ] Different room types
+- [ ] Subscription only after applying by owner ability
+- [ ] "Close" - room invisible in search
+- [ ] Update keywords on title change
