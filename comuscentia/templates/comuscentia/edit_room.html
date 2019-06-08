@@ -1,5 +1,7 @@
 {% extends 'comuscentia/base.html' %}
 
+{% block title %}{% if request.get_full_path == "/room/new/" %}Create new{% else %}Edit{% endif %} room{% endblock %}
+
 {% block content %}
 <div class="content container">
 	<h2>{% if request.get_full_path == "/room/new/" %}Create new{% else %}Edit{% endif %} room</h2>
