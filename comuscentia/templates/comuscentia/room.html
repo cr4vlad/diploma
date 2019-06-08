@@ -5,16 +5,17 @@
 	<h2>{{ room.title }}</h2><br>
 	<div class="content container">
     	<p class="alert alert-primary">{{ room.description|linebreaksbr }}</p>
-        <p>Participants: {{ count }}</p>
-    	<p>{{ room.textblock|linebreaksbr }}</p><br>
+        <p>Room owner: {{ room.owner }}     <span style='float: right;'>Created {{ room.created_date }}</span></p>
+    	<p class='room'>{{ room.textblock|linebreaksbr }}</p>
+        <p>Participants: {{ count }}</p><br>
 
     {% if user == room.owner %}
         <a class="btn btn-secondary" href="{% url 'edit_room' pk=room.pk %}">Edit room</a>
 
-    <!-- Форма для добавления ключевых слов. Только для создателя комнаты. (?) -->
+    <!-- Форма для добавления ключевых слов. Только для создателя комнаты. Мб в edit room... (?) -->
     
-    <!-- delete room button (а можно ли просто взять и удалить комнату? мб кнопка будет запускать процесс удаления, который удалит комнату только через неделю, чтоб все юзеры успели себе сохранить все что нужно. Ну и закрыть тогда эту комнату для новых учасников) -->
-        <a class="btn btn-danger" href="{% url 'delete' pk=room.pk %}">Delete</a>
+    <!-- а можно ли просто взять и удалить комнату? мб кнопка будет запускать процесс удаления, который удалит комнату только через неделю, чтоб все юзеры успели себе сохранить все что нужно. Ну и закрыть тогда эту комнату для новых учасников. Ну и дать возможность отменить удаление в этот срок -->
+        <a class="btn btn-danger" href="{% url 'delete' pk=room.pk %}">Delete room</a>
     {% else %}
         {% if user not in participants %}
             <a class="btn btn-primary" href="{% url 'sub' pk=room.pk %}">Subscribe</a>

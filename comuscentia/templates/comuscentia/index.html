@@ -37,7 +37,7 @@
 
 <!------------------------------------------------------------------>
 
-		{% else %} <!-- Или сделать это все двумя аккуратными кнопками в шапке?.. -->
+		{% else %}
 
 			<a class="btn" href="{% url 'django_registration_register' %}">Registration</a><br>
 			<a class="btn" href="{% url 'login' %}">Login</a>
@@ -66,12 +66,11 @@ function search() {
 
         // handle a successful response
         success : function(json) {
-            //$('#post-text').val(''); // remove the value from the input
             console.log(json); // log the returned json to the console
             $('#search_results').empty();
             var i;
             for (i = 0; i < json.pk.length; i++) {
-            	$('#search_results').append('<div class="room"><h4><a href="room/'+json.pk[i]+'">'+json.title[i]+'</a></h4><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>');
+            	$('#search_results').append('<div class="room"><h4><a href="room/'+json.pk[i]+'">'+json.title[i]+'</a></h4><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>'); // add html code with serach result
         	}
             console.log("success"); // another sanity check
         },

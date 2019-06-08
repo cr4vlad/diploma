@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="content container">
-	<h2>Edit post</h2>
+	<h2>{% if request.get_full_path == "/room/new/" %}Create new{% else %}Edit{% endif %} room</h2>
 	<form method="POST" class="post-form">{% csrf_token %}
     	{{ form.as_p }}
     	<div class="center"><button type="submit" class="btn btn-primary">Save</button></div>

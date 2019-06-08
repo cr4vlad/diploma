@@ -22,7 +22,7 @@ h1 {
 	display: inline-block;
 	margin: 10px;
 	color: white;
-	font-family: 'Vast Shadow', cursive;
+	font-family: 'Fredericka the Great', cursive;
 }
 
 #float_right {
@@ -54,10 +54,30 @@ input[type=submit].search {
 
 input#search_field {
 	width: 400px;
+	outline: none;
+	border-color: #ddd;
+	border-top: 1px;
+	border-right: 1px;
+	border-left: 1px;
+	border-radius: 12px;
+	padding-left: 7px;
+}
+
+input#search_field:focus {
+	border: 1px solid #006bdd;
+	border-radius: 5px;
+}
+
+input#search_field:required {
+    box-shadow:none;
 }
 
 table {
 	margin: 10px;
+}
+
+td {
+	padding-right: 5px;
 }
 
 button {

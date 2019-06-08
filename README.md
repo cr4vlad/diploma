@@ -9,7 +9,7 @@ Registration was made by using [Django Registration](https://django-registration
 - [x] Search
 - [x] Refined rooms logic (subscribe/unsubscribe button, delete room, etc)
 - [x] Access rights (some users only)
-- [ ] Tests (in progress)
+- [x] Tests (maybe add more in future)
 - [x] Kinda adaptive design
 	
 	Questionable:
@@ -21,4 +21,5 @@ Registration was made by using [Django Registration](https://django-registration
 - [ ] Different room types
 - [ ] Subscription only after applying by owner ability
 - [ ] "Close" - room invisible in search
-- [ ] Update keywords on title change
+- [ ] Update keywords if room title changed
+- [ ] Results pages (1-10, 10-20, ..)

@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.http import JsonResponse, HttpResponse
-from django.template.loader import render_to_string # check if really used
+from django.http import JsonResponse
 from .models import Room, Participation, Keyword
 from .forms import RoomForm, SearchForm
 import re
@@ -27,7 +26,6 @@ def search(request):
 		print("ajax search view reached")
 		query = request.POST.get('query')
 		print(query)
-		response_data = {}
 
 		#search algorithm
 		keywords = get_keywords(query)
@@ -37,16 +35,17 @@ def search(request):
 			if keyword_rooms:
 				rooms = [keyword_room.room for keyword_room in keyword_rooms] # new rooms
 				for room in rooms:
-					# записывать в список [комната, значение совпадения]
+					# write to list [room, match value]
 					result_rooms = [result[0] for result in all_results] # rooms, that are already in result
-					if room in result_rooms: # если комната уже есть в результатах
-						# найти room в all_results, и добавить 1 к соответствующему значению
+					if room in result_rooms: # if room is already in results
+						# find room in all_results and add 1 to the appropriate value
 						index = result_rooms.index(room)
 						print('all_results[index][1]: ' + str(all_results[index][1]))
 						all_results[index][1] += 1 # может +1 только когда полное совпадение keyword, в других случаях чем слабее совпадение (чем меньше % слова совпадает), тем меньше добавлять. Но для этого нужна сортировка, а не просто max. Тогда можно будет удалить однобуквенные стоп-слова
 					else:
 						all_results.append([room, 1])
 		if all_results:
+			# some prints to console for debagging
 			print('all_results: ' + str(all_results))
 			result_nums = [result[1] for result in all_results] # all_results[1]
 			print('result_nums: ' + str(result_nums))
@@ -78,6 +77,7 @@ def search(request):
 			for index in indexes:
 				print(index)
 				results.append(all_results[index][0])
+			response_data = {}
 			response_data['pk'] = [result.pk for result in results]
 			response_data['title'] = [result.title for result in results]
 			response_data['description'] = [result.description for result in results]
@@ -87,15 +87,15 @@ def search(request):
 			print('0 results')
 	else:
 		print("ajax view doesn't work")
-	return JsonResponse(status=404)
+	return JsonResponse(status=404) # no results
 
 @login_required
 def room(request, pk):
 	room = get_object_or_404(Room, pk=pk)
 	participations = Participation.objects.filter(room=room)
-	users = [participation.user for participation in participations]
+	subscribers = [participation.user for participation in participations] # subscribers list
 	count = participants(room)
-	return render(request, 'comuscentia/room.html', {'room': room, 'count': count, 'participants': users})
+	return render(request, 'comuscentia/room.html', {'room': room, 'count': count, 'participants': subscribers})
 
 @login_required
 def new_room(request):
@@ -106,10 +106,10 @@ def new_room(request):
 			room.owner = request.user
 			room.created_date = timezone.now()
 			room.save()
-			participant = Participation(user=request.user, room=room)
+			participant = Participation(user=request.user, room=room) # add new room + owner to participation table
 			participant.save()
 			keywords = get_keywords(request.POST['title'])
-			for keyword in keywords:
+			for keyword in keywords: # add title-keywords to keywords table one by one
 				kw = Keyword(room=room, keyword=keyword)
 				kw.save()
 			return redirect('room', pk=room.pk)
