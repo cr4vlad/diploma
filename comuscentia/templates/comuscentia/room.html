@@ -9,9 +9,23 @@
     	<p class="alert alert-primary">{{ room.description|linebreaksbr }}</p>
         <p>Room owner: {{ room.owner }}     <span style='float: right;'>Created {{ room.created_date }}</span></p>
     	<p class='room'>{{ room.textblock|linebreaksbr }}</p>
-        <p>Participants: {{ count }}</p><br>
+        <p>Participants: {{ count }}</p>
 
     {% if user == room.owner %}
+        {% if count > 1 %}
+        <h5>Participants list</h5>
+        <table class="table table-sm table-bordered">
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+        </tr>
+        {% for participant in participants %}
+            {% if participant != room.owner %}
+                <tr><td>{{ participant.username }}</td><td>{{ participant.email }}</td></tr>
+            {% endif %}
+        {% endfor %}
+        </table>
+        {% endif %}
         <a class="btn btn-secondary" href="{% url 'edit_room' pk=room.pk %}">Edit room</a>
 
     <!-- Форма для добавления ключевых слов. Только для создателя комнаты. Мб в edit room... (?) -->
@@ -19,6 +33,7 @@
     <!-- а можно ли просто взять и удалить комнату? мб кнопка будет запускать процесс удаления, который удалит комнату только через неделю, чтоб все юзеры успели себе сохранить все что нужно. Ну и закрыть тогда эту комнату для новых учасников. Ну и дать возможность отменить удаление в этот срок -->
         <a class="btn btn-danger" href="{% url 'delete' pk=room.pk %}">Delete room</a>
     {% else %}
+        <br>
         {% if user not in participants %}
             <a class="btn btn-primary" href="{% url 'sub' pk=room.pk %}">Subscribe</a>
         {% else %}
