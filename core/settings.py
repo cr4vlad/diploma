@@ -25,7 +25,7 @@ SECRET_KEY = 'yo-58+_o2cc6y24znuaz3-xees#@z_=6#y(lyi+q@o!zb%q(!g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'comuscentia.pythonanywhere.com']
 
 
 # Application definition

@@ -99,6 +99,10 @@ button {
 	margin-top: 10px;
 }
 
+.content {
+	margin-bottom: 30px;
+}
+
 .center {
 	text-align:center;
 	margin:auto;
