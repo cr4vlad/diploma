@@ -55,7 +55,7 @@
 <script type="text/javascript">
 $('#search_form').on('submit', function(event){
     event.preventDefault();
-    console.log("form submitted")
+    console.log("form submitted");
     search();
 });
 
@@ -72,7 +72,7 @@ function search() {
             $('#search_results').empty();
             var i;
             for (i = 0; i < json.pk.length; i++) {
-            	$('#search_results').append('<div class="room"><h4><a href="room/'+json.pk[i]+'">'+json.title[i]+'</a></h4><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>'); // add html code with serach result
+            	$('#search_results').append('<div class="room"><h4><a href="room/'+json.pk[i]+'">'+json.title[i]+'</a></h4><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>'); // add html code with search result
         	}
             console.log("success"); // another sanity check
         },

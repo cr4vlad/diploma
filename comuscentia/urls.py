@@ -10,4 +10,6 @@ urlpatterns = [
     path('room/<int:pk>/', views.room, name='room'),
     path('room/new/', views.new_room, name='new_room'),
     re_path(r'^search/$', views.search),
+    path('room/<int:pk>/loop/', views.loop),
+    path('room/<int:pk>/update/<int:new>', views.update),
 ]

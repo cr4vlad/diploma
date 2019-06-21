@@ -11,6 +11,19 @@
     	<p class='room'>{{ room.textblock|linebreaksbr }}</p>
         <p>Participants: {{ count }}</p>
 
+    {% if user in participants %}
+        <div id="chat">
+            {% for msg in messages %}
+            <p class="message"><b>{{ msg.author }}:</b> {{ msg.message }} <span style='float: right; color: grey;'>{{ msg.time }}</span></p>
+            {% endfor %}
+        </div>
+        <form class="center" method="post" id="message_form">
+            {% csrf_token %}
+            {{ form.as_table }}
+            <input class="btn btn-info" type="submit" value="Send">
+        </form>
+    {% endif %}
+
     {% if user == room.owner %}
         {% if count > 1 %}
         <h5>Participants list</h5>
@@ -42,4 +55,73 @@
     {% endif %}
 	</div>
 
+{% endblock %}
+
+{% block javascript %}
+{% load static %}
+<script type="text/javascript">
+window.onload = function loop() {
+    $.ajax({
+        url : "loop/", // the endpoint
+        type : "GET", // http method
+
+        // handle a successful response
+        success : function(json) {
+            if ({{ room.msgs }} != json.msgs) {
+                console.log("INCOMING MESSAGE")
+                $.ajax({
+                    url : "update/" + (json.msgs - {{ room.msgs }}) + "/", // the endpoint
+                    type : "GET", // http method
+
+                    // handle a successful response
+                    success : function(json) {
+                        var i;
+                        for (i = 0; i < json.author.length; i++) {
+                            $('#chat').append('<p class="message"><b>'+json.author[i]+':</b> '+json.msg[i]+' <span style="float: right; color: grey;">'+json.time[i]+'</span></p>'); // add html code with send result
+                        }
+                        console.log("messages received"); // another sanity check
+                    },
+
+                    error : function() {
+                        console.log("Update error");
+                    }
+                });
+            }
+        },
+
+        error : function() {
+            console.log("Loop error");
+        }
+    });
+    setTimeout(loop, 2000);
+};
+
+$('#message_form').on('submit', function(event){
+    event.preventDefault();
+    console.log("form submitted")
+    send();
+});
+
+function send() {
+    console.log("sending is working") // sanity check
+    $.ajax({
+        url : "", // the endpoint
+        type : "POST", // http method
+        data : { msg : $('#message_field').val() }, // data sent with the post request
+
+        // handle a successful response
+        success : function(json) {
+            console.log(json); // log the returned json to the console
+            $('#message_field').val('');
+            $('#chat').append('<p class="message"><b>'+json.author+':</b> '+json.msg+' <span style="float: right; color: grey;">'+json.time+'</span></p>'); // add html code with send result
+            console.log("success"); // another sanity check
+        },
+
+        error : function() {
+            console.log("Sending error");
+        }
+    });
+};
+</script>
+<script src="{% static 'js/csrf.js' %}" type="text/javascript"></script>
 {% endblock %}

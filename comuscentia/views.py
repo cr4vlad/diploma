@@ -2,8 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.http import JsonResponse
-from .models import Room, Participation, Keyword
-from .forms import RoomForm, SearchForm
+from .models import Room, Participation, Keyword, Message
+from .forms import RoomForm, SearchForm, MessageForm
+from datetime import datetime
 import re
 
 def index(request):
@@ -92,10 +93,51 @@ def search(request):
 @login_required
 def room(request, pk):
 	room = get_object_or_404(Room, pk=pk)
-	participations = Participation.objects.filter(room=room)
-	subscribers = [participation.user for participation in participations] # subscribers list
-	count = participants(room)
-	return render(request, 'comuscentia/room.html', {'room': room, 'count': count, 'participants': subscribers})
+	if request.method == "POST" and request.is_ajax():
+		msg = Message.objects.create(author = request.user, time = timezone.now(), room = room)
+		msg.message = request.POST.get('msg')
+		msg.save()
+		room.msgs += 1
+		if msg:
+			new_msg = {}
+			new_msg['author'] = msg.author.username
+			new_msg['msg'] = msg.message
+			new_msg['time'] = msg.time.strftime("%B %d, %Y, %I:%M %p")
+			return JsonResponse(new_msg)
+		else:
+			return JsonResponse(status=404)
+	else:
+		participations = Participation.objects.filter(room=room)
+		messages = Message.objects.filter(room=room)
+		subscribers = [participation.user for participation in participations] # subscribers list
+		count = participants(room)
+		form = MessageForm()
+		return render(request, 'comuscentia/room.html', {'room': room, 'count': count, 'participants': subscribers, 'messages': messages, 'form': form})
+
+def loop(request, pk):
+	room = get_object_or_404(Room, pk=pk)
+	result = {}
+	result['msgs'] = room.msgs
+	return JsonResponse(result)
+
+def update(request, pk, new):
+	room = get_object_or_404(Room, pk=pk)
+	print('UPDATING')
+	if request.method == "GET" and request.is_ajax():
+		messages = Message.objects.filter(room=room)
+		msgs = {}
+		msgs['author'] = []
+		msgs['msg'] = []
+		msgs['time'] = []
+		for i in range(1, new):
+			msg = messages[-i]
+			msgs['author'].append(msg.author.username)
+			msgs['msg'].append(msg.message)
+			msgs['time'].append(msg.time.strftime("%B %d, %Y, %I:%M %p"))
+		return JsonResponse(msgs)
+	else:
+		return JsonResponse(status=404)
+
 
 @login_required
 def new_room(request):
