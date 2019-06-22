@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 from . import views
 
 urlpatterns = [
@@ -9,7 +9,7 @@ urlpatterns = [
     path('room/<int:pk>/delete/', views.delete, name='delete'),
     path('room/<int:pk>/', views.room, name='room'),
     path('room/new/', views.new_room, name='new_room'),
-    re_path(r'^search/$', views.search),
+    path('search/', views.search),
     path('room/<int:pk>/loop/', views.loop),
-    path('room/<int:pk>/update/<int:new>', views.update),
+    path('room/<int:pk>/update/<int:new>/', views.update),
 ]

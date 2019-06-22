@@ -98,13 +98,16 @@ def room(request, pk):
 		msg.message = request.POST.get('msg')
 		msg.save()
 		room.msgs += 1
+		room.save()
 		if msg:
 			new_msg = {}
 			new_msg['author'] = msg.author.username
 			new_msg['msg'] = msg.message
 			new_msg['time'] = msg.time.strftime("%B %d, %Y, %I:%M %p")
+			print(new_msg)
 			return JsonResponse(new_msg)
 		else:
+			print("send 404")
 			return JsonResponse(status=404)
 	else:
 		participations = Participation.objects.filter(room=room)
@@ -124,16 +127,18 @@ def update(request, pk, new):
 	room = get_object_or_404(Room, pk=pk)
 	print('UPDATING')
 	if request.method == "GET" and request.is_ajax():
-		messages = Message.objects.filter(room=room)
+		messages = list(Message.objects.filter(room=room))
+		print(messages)
 		msgs = {}
 		msgs['author'] = []
 		msgs['msg'] = []
 		msgs['time'] = []
-		for i in range(1, new):
+		for i in range(1, new+1):
 			msg = messages[-i]
 			msgs['author'].append(msg.author.username)
 			msgs['msg'].append(msg.message)
 			msgs['time'].append(msg.time.strftime("%B %d, %Y, %I:%M %p"))
+		print(msgs)
 		return JsonResponse(msgs)
 	else:
 		return JsonResponse(status=404)

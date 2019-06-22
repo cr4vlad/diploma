@@ -60,6 +60,7 @@
 {% block javascript %}
 {% load static %}
 <script type="text/javascript">
+var count = {{ room.msgs }};
 window.onload = function loop() {
     $.ajax({
         url : "loop/", // the endpoint
@@ -67,19 +68,21 @@ window.onload = function loop() {
 
         // handle a successful response
         success : function(json) {
-            if ({{ room.msgs }} != json.msgs) {
-                console.log("INCOMING MESSAGE")
+            console.log(count);
+            if (count != json.msgs) {
+                console.log("INCOMING MESSAGE");
                 $.ajax({
-                    url : "update/" + (json.msgs - {{ room.msgs }}) + "/", // the endpoint
+                    url : "update/" + (json.msgs - count) + "/", // the endpoint
                     type : "GET", // http method
 
                     // handle a successful response
-                    success : function(json) {
+                    success : function(json2) {
                         var i;
-                        for (i = 0; i < json.author.length; i++) {
-                            $('#chat').append('<p class="message"><b>'+json.author[i]+':</b> '+json.msg[i]+' <span style="float: right; color: grey;">'+json.time[i]+'</span></p>'); // add html code with send result
+                        for (i = 0; i < json2.author.length; i++) {
+                            $('#chat').append('<p class="message"><b>'+json2.author[i]+':</b> '+json2.msg[i]+' <span style="float: right; color: grey;">'+json2.time[i]+'</span></p>'); // add html code with send result
                         }
                         console.log("messages received"); // another sanity check
+                        count = json.msgs;
                     },
 
                     error : function() {
@@ -115,6 +118,7 @@ function send() {
             $('#message_field').val('');
             $('#chat').append('<p class="message"><b>'+json.author+':</b> '+json.msg+' <span style="float: right; color: grey;">'+json.time+'</span></p>'); // add html code with send result
             console.log("success"); // another sanity check
+            count += 1;
         },
 
         error : function() {
