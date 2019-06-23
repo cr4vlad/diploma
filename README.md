@@ -2,6 +2,7 @@
 Creation of web-application for automation of distant learning of studying items process.
 ## Environment
 Registration was made by using [Django Registration](https://django-registration.readthedocs.io/en/3.0.1/one-step-workflow.html) (one step workflow).
+Text formatting was made by using [Textile](https://textile-lang.com/) filter in [Django-markup](https://docs.elephant.house/django-markup/).
 ## Tasks
 - [x] Basic rooms logic
 - [x] Login
@@ -13,13 +14,14 @@ Registration was made by using [Django Registration](https://django-registration
 - [x] Kinda adaptive design
 	
 	Questionable:
-- [ ] Chat
+- [x] Chat
+- [x] Mail delivery
 - [ ] Usage tips
 - [ ] Ranking
 - [ ] Certification
 - [ ] Tests for subscription
 - [ ] Different room types
-- [ ] Subscription only after applying by owner ability
+- [ ] "Subscription only after applying by owner" ability
 - [ ] "Close" - room invisible in search
 - [ ] Update keywords if room title changed
 - [ ] Results pages (1-10, 10-20, ..)

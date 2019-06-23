@@ -18,7 +18,7 @@ header {
   	box-shadow: 0 3px #006bdd;
 }
 
-h1 {
+#sitename h1 {
 	display: inline-block;
 	margin: 10px;
 	color: white;
@@ -32,13 +32,15 @@ h1 {
 	padding-top: 15px;
 }
 
-h2 {
-	text-align: center;
+.down_right {
+	display: inline-block;
+	float: right;
+	margin-bottom: 30px;
+	margin-right: 5%;
 }
 
-h5 {
-	padding-top: 10px;
-	padding-left: 20px;
+h2.title {
+	text-align: center;
 }
 
 textarea {
@@ -77,24 +79,6 @@ input#search_field:required {
     box-shadow:none;
 }
 
-table {
-	margin: 10px;
-}
-
-.table {
-	width: 50%;
-	max-width: 100%;
-	text-align: center;
-}
-
-.table td {
-	min-width: 1%;
-}
-
-td {
-	padding-right: 5px;
-}
-
 button {
 	margin-top: 10px;
 }
@@ -130,6 +114,94 @@ p {
 	margin: 2px;
 }
 
+#chat {
+	display: block;
+	width: 90%;
+	margin-left: 5%;
+	min-height: 200px;
+	border: 1px solid #006bdd;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	margin-top: 15px;
+	padding: 5px;
+	background-color: #eef6ff;
+}
+
+input#message_field {
+	width: 83%;
+	min-height: 38px;
+	border: 1px solid #006bdd;
+	border-radius: 5px;
+	margin-left: 5%;
+	margin-top: 0px;
+	margin-right: -4px;
+	padding: 5px;
+	background-color: #eef6ff;
+}
+
+input#message_field:required {
+    box-shadow:none;
+}
+
+input#send {
+	width: 6%;
+	margin-bottom: 5px;
+	margin-left: 1%;
+	font-size: 16px;
+}
+
+form#message_form {
+	margin-bottom: 9px;
+}
+
+form#mailing_form {
+	margin-top: 12px;
+}
+
+input#subject_field {
+	width: 90%;
+	min-height: 38px;
+	border: 1px solid #006bdd;
+	border-radius: 5px;
+	margin-left: 5%;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 5px;
+	background-color: #eef6ff;
+}
+
+input#subject_field:required {
+    box-shadow:none;
+}
+
+textarea#mail_field {
+	width: 90%;
+	margin-left: 5%;
+	height: 150px;
+	border: 1px solid #006bdd;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	padding: 5px;
+	background-color: #eef6ff;
+}
+
+textarea#mail_field:required {
+    box-shadow:none;
+}
+
+input#send_emails {
+	display: block;
+	width: 200px;
+	font-size: 16px;
+	margin: auto;
+	margin-bottom: 0px;
+}
+
+form#verification_form {
+	display: inline-block;
+}
+
 ul.errorlist {
 	color: red;
 }
@@ -139,7 +211,7 @@ ul.errorlist {
 
  Small devices (landscape phones, 576px and up)*/
 @media (min-width: 576px) {
-	h1 {
+	#sitename h1 {
 		padding-left: 50px;
 	}
 
@@ -150,7 +222,7 @@ ul.errorlist {
 
 /* Medium devices (tablets, 768px and up)*/
 @media (min-width: 768px) {
-	h1 {
+	#sitename h1 {
 		padding-left: 100px;
 	}
 
@@ -161,7 +233,7 @@ ul.errorlist {
 
 /* Large devices (desktops, 992px and up)*/
 @media (min-width: 992px) {
-	h1 {
+	#sitename h1 {
 		padding-left: 150px;
 	}
 
@@ -172,7 +244,7 @@ ul.errorlist {
 
 /* Extra large devices (large desktops, 1200px and up)*/
 @media (min-width: 1200px) {
-	h1 {
+	#sitename h1 {
 		padding-left: 250px;
 	}
 

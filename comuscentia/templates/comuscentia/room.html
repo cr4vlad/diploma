@@ -1,43 +1,46 @@
 {% extends 'comuscentia/base.html' %}
+{% load markup_tags %}
 
 {% block title %}{{ room.title }}{% endblock %}
 
 {% block content %}
-
-	<h2>{{ room.title }}</h2><br>
+<!-- Room info -->
+	<h2 class='title'>{{ room.title }}</h2><br>
 	<div class="content container">
     	<p class="alert alert-primary">{{ room.description|linebreaksbr }}</p>
         <p>Room owner: {{ room.owner }}     <span style='float: right;'>Created {{ room.created_date }}</span></p>
-    	<p class='room'>{{ room.textblock|linebreaksbr }}</p>
-        <p>Participants: {{ count }}</p>
-
+    	<div class='room'>{{ room.textblock|apply_markup:"textile" }}</div>
+        <p id="participants">Participants: {{ count }}</p>
+<!-- Chat -->
     {% if user in participants %}
+        <h4 class='center'>Chat</h4>
         <div id="chat">
             {% for msg in messages %}
             <p class="message"><b>{{ msg.author }}:</b> {{ msg.message }} <span style='float: right; color: grey;'>{{ msg.time }}</span></p>
             {% endfor %}
         </div>
-        <form class="center" method="post" id="message_form">
+        <form method="post" id="message_form">
             {% csrf_token %}
-            {{ form.as_table }}
-            <input class="btn btn-info" type="submit" value="Send">
+            {{ mesForm.as_table }}
+            <input class="btn btn-primary" id='send' type="submit" value="Send">
         </form>
     {% endif %}
-
+<!-- Buttons and email -->
     {% if user == room.owner %}
         {% if count > 1 %}
-        <h5>Participants list</h5>
-        <table class="table table-sm table-bordered">
-        <tr>
-            <th scope="col">Username</th>
-            <th scope="col">Email</th>
-        </tr>
-        {% for participant in participants %}
-            {% if participant != room.owner %}
-                <tr><td>{{ participant.username }}</td><td>{{ participant.email }}</td></tr>
-            {% endif %}
-        {% endfor %}
-        </table>
+        <h4 class='center'>Mail delivery</h4>
+        <form method="post" id="mailing_form">
+            {% csrf_token %}
+            {{ mailForm.as_table }}
+            <input class="btn btn-primary" id="send_emails" type="submit" value="Send emails">
+        </form>
+        {% endif %}
+        <div class="down_right">
+        {% if not room.verificated and not asked4verif %}
+        <form method="post" id="verification_form">
+            {% csrf_token %}
+            <input class="btn btn-secondary" id="verification" type="submit" value="Ask for verification">
+        </form>
         {% endif %}
         <a class="btn btn-secondary" href="{% url 'edit_room' pk=room.pk %}">Edit room</a>
 
@@ -45,13 +48,16 @@
     
     <!-- а можно ли просто взять и удалить комнату? мб кнопка будет запускать процесс удаления, который удалит комнату только через неделю, чтоб все юзеры успели себе сохранить все что нужно. Ну и закрыть тогда эту комнату для новых учасников. Ну и дать возможность отменить удаление в этот срок -->
         <a class="btn btn-danger" href="{% url 'delete' pk=room.pk %}">Delete room</a>
+        </div>
     {% else %}
         <br>
+        <div class="down_right">
         {% if user not in participants %}
             <a class="btn btn-primary" href="{% url 'sub' pk=room.pk %}">Subscribe</a>
         {% else %}
             <a class="btn btn-danger" href="{% url 'unsub' pk=room.pk %}">Unsubscribe</a>
         {% endif %}
+        </div>
     {% endif %}
 	</div>
 
@@ -105,6 +111,12 @@ $('#message_form').on('submit', function(event){
     send();
 });
 
+$('#verification_form').on('submit', function(event){
+    event.preventDefault();
+    console.log("asked for verification")
+    verificate();
+});
+
 function send() {
     console.log("sending is working") // sanity check
     $.ajax({
@@ -123,6 +135,24 @@ function send() {
 
         error : function() {
             console.log("Sending error");
+        }
+    });
+};
+
+function verificate() {
+    console.log("verification is working") // sanity check
+    $.ajax({
+        url : "verificate/", // the endpoint
+        type : "POST", // http method
+
+        // handle a successful response
+        success : function() {
+            $('#verification_form').hide();
+            console.log("Verification success"); // another sanity check
+        },
+
+        error : function() {
+            console.log("Verification error");
         }
     });
 };

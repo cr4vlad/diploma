@@ -11,5 +11,6 @@ urlpatterns = [
     path('room/new/', views.new_room, name='new_room'),
     path('search/', views.search),
     path('room/<int:pk>/loop/', views.loop),
+    path('room/<int:pk>/verificate/', views.verificate),
     path('room/<int:pk>/update/<int:new>/', views.update),
 ]

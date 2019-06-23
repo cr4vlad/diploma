@@ -12,8 +12,7 @@
     		{% csrf_token %}
     		{{ form.as_table }}
     		<input class="btn search" type="submit" value="">
-  			</form>
-            <br>
+  			</form><br>
 			<div id="search_results">
 			</div>
 		</div>
@@ -31,7 +30,7 @@
 				<h3>Your rooms:</h3>
 				{% for room in rooms %}
 					<div class="room">
-						<h4><a href="{% url 'room' pk=room.0.pk %}">{{ room.0.title }}</a></h4>
+						<h4><a href="{% url 'room' pk=room.0.pk %}">{% if room.0.verificated %}<img src="static/images/check.png">{% endif %} {{ room.0.title }}</a></h4>
 						<p>Participants: {{ room.1 }}</p>
 					</div>
 				{% endfor %}
@@ -72,7 +71,10 @@ function search() {
             $('#search_results').empty();
             var i;
             for (i = 0; i < json.pk.length; i++) {
-            	$('#search_results').append('<div class="room"><h4><a href="room/'+json.pk[i]+'">'+json.title[i]+'</a></h4><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>'); // add html code with search result
+                if (json.verificated[i])
+                    $('#search_results').append('<div class="room"><h4><a href="room/'+json.pk[i]+'"><img src="static/images/check.png"> '+json.title[i]+'</a></h4><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>');
+                else
+            	   $('#search_results').append('<div class="room"><h4><a href="room/'+json.pk[i]+'">'+json.title[i]+'</a></h4><p>'+json.description[i]+'</p><p>Participants: '+json.participants[i]+'</p></div>'); // add html code with search result
         	}
             console.log("success"); // another sanity check
         },

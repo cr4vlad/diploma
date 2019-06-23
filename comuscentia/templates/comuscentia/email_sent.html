@@ -1,0 +1,16 @@
+{% extends 'comuscentia/base.html' %}
+
+{% block title %}Registration complete{% endblock %}
+
+{% block content %}
+
+<h2 class='title'>Email sent successfully</h2>
+<div class="content container">
+	Email successfully sent to every subscriber of your room.<br>
+	<a href="/">Comuscentia main page</a> | <a href="{% url 'room' pk=room_pk %}">Return to your room</a><br><br>
+	<h5>Sent email:</h5>
+	<p><b>Subject</b>: {{ subject }}</p>
+	<p><b>Message</b>: {{ message|linebreaksbr }}</p>
+</div>
+
+{% endblock %}

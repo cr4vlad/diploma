@@ -8,7 +8,7 @@
     </head>
 	<body>
 		<header>
-			<a href="/"><h1>Comuscentia</h1></a>
+			<a id='sitename' href="/"><h1>Comuscentia</h1></a>
             {% if user.is_authenticated %}
                 <div id="float_right">Hello {{ user.username }} <small>( <a href="{% url 'logout' %}" style="color: white;">Log out</a> )</small></div>
             {% endif %}

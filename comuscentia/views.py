@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.http import JsonResponse
-from .models import Room, Participation, Keyword, Message
-from .forms import RoomForm, SearchForm, MessageForm
+from django.http import JsonResponse, HttpResponse
+from django.core.mail import send_mail
+from .models import Room, Participation, Keyword, Message, Verification
+from .forms import RoomForm, SearchForm, MessageForm, MailingForm
 from datetime import datetime
 import re
 
@@ -83,6 +84,7 @@ def search(request):
 			response_data['title'] = [result.title for result in results]
 			response_data['description'] = [result.description for result in results]
 			response_data['participants'] = [participants(result) for result in results]
+			response_data['verificated'] = [result.verificated for result in results]
 			return JsonResponse(response_data)
 		else:
 			print('0 results')
@@ -109,13 +111,28 @@ def room(request, pk):
 		else:
 			print("send 404")
 			return JsonResponse(status=404)
+	elif request.method == "POST":
+		mailForm = MailingForm(request.POST)
+		if mailForm.is_valid():
+			subject = request.POST.get('subject_field', room.title + 'Comuscentia') # potential error
+			message = request.POST.get('mail_field', 'Looks like empty message was sent. Sorry about this mistake.')
+			emails = []
+			for participation in Participation.objects.filter(room=room):
+				if participation.user != request.user:
+					emails.append(participation.user.email)
+			send_mail(subject, message + "\nSent from Comuscentia by " + request.user.username + ".", 'request.user.email', emails) #request.user.email OR my email
+		return render(request, 'comuscentia/email_sent.html', {'room_pk': room.pk, 'subject': subject, 'message': message + "\nSent from Comuscentia by " + request.user.username + "."})
 	else:
 		participations = Participation.objects.filter(room=room)
 		messages = Message.objects.filter(room=room)
 		subscribers = [participation.user for participation in participations] # subscribers list
 		count = participants(room)
-		form = MessageForm()
-		return render(request, 'comuscentia/room.html', {'room': room, 'count': count, 'participants': subscribers, 'messages': messages, 'form': form})
+		mesForm = MessageForm()
+		mailForm = MailingForm()
+		asked4verif = False
+		if Verification.objects.filter(room=room):
+			asked4verif = True
+		return render(request, 'comuscentia/room.html', {'room': room, 'count': count, 'participants': subscribers, 'messages': messages, 'mesForm': mesForm, 'mailForm': mailForm, 'asked4verif': asked4verif})
 
 def loop(request, pk):
 	room = get_object_or_404(Room, pk=pk)
@@ -143,6 +160,11 @@ def update(request, pk, new):
 	else:
 		return JsonResponse(status=404)
 
+def verificate(request, pk):
+	room = get_object_or_404(Room, pk=pk)
+	verif = Verification.objects.create(room = room, time = timezone.now())
+	verif.save()
+	return HttpResponse('')
 
 @login_required
 def new_room(request):
